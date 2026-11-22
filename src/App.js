@@ -2,102 +2,71 @@ import { useRef, useState } from "react";
 import "./App.css";
 
 function App() {
-  const firstNumberRef = useRef(null);
-  const secondNumberRef = useRef(null);
-  const [result, setResult] = useState("");
+  const inputRef = useRef(null);
+  const [result, setResult] = useState(0);
 
-  const calculate = (operation) => {
-    const firstValue = firstNumberRef.current.value;
-    const secondValue = secondNumberRef.current.value;
+  function plus() {
+    setResult(result + Number(inputRef.current.value));
+  }
 
-    if (firstValue.trim() === "" || secondValue.trim() === "") {
-      setResult("Please enter both numbers.");
+  function minus() {
+    setResult(result - Number(inputRef.current.value));
+  }
+
+  function times() {
+    setResult(result * Number(inputRef.current.value));
+  }
+
+  function divide() {
+    const inputValue = Number(inputRef.current.value);
+
+    if (inputValue === 0) {
+      window.alert("Cannot divide by zero.");
       return;
     }
 
-    const num1 = Number(firstValue);
-    const num2 = Number(secondValue);
-    let answer;
+    setResult(result / inputValue);
+  }
 
-    switch (operation) {
-      case "addition":
-        answer = num1 + num2;
-        break;
-      case "subtraction":
-        answer = num1 - num2;
-        break;
-      case "multiplication":
-        answer = num1 * num2;
-        break;
-      case "division":
-        if (num2 === 0) {
-          setResult("Cannot divide by zero!");
-          return;
-        }
-        answer = num1 / num2;
-        break;
-      default:
-        return;
-    }
+  function resetInput() {
+    inputRef.current.value = "";
+  }
 
-    if (!Number.isFinite(answer)) {
-      setResult("Result is too large.");
-      return;
-    }
-
-    setResult(String(Number(answer.toFixed(8))));
-  };
-
-  const resetInputs = () => {
-    firstNumberRef.current.value = "";
-    secondNumberRef.current.value = "";
-    firstNumberRef.current.focus();
-  };
-
-  const resetResult = () => {
-    setResult("");
-  };
+  function resetResult() {
+    setResult(0);
+  }
 
   return (
     <div className="App">
       <main className="calculator">
         <h1>React Calculator</h1>
-        <p className="subtitle">Perform basic mathematical operations</p>
+        <p className="subtitle">Enter a number and choose an operation.</p>
 
         <div className="input-group">
-          <label htmlFor="first-number">First Number</label>
+          <label htmlFor="calculator-input">Number</label>
           <input
-            id="first-number"
+            id="calculator-input"
             type="number"
             step="any"
-            placeholder="Enter first number"
-            ref={firstNumberRef}
-          />
-
-          <label htmlFor="second-number">Second Number</label>
-          <input
-            id="second-number"
-            type="number"
-            step="any"
-            placeholder="Enter second number"
-            ref={secondNumberRef}
+            placeholder="Enter a number"
+            ref={inputRef}
           />
         </div>
 
         <div className="operations">
-          <button onClick={() => calculate("addition")}>Addition (+)</button>
-          <button onClick={() => calculate("subtraction")}>Subtraction (-)</button>
-          <button onClick={() => calculate("multiplication")}>Multiplication (×)</button>
-          <button onClick={() => calculate("division")}>Division (÷)</button>
+          <button onClick={plus}>Add</button>
+          <button onClick={minus}>Subtract</button>
+          <button onClick={times}>Multiply</button>
+          <button onClick={divide}>Divide</button>
         </div>
 
         <div className="result-box" aria-live="polite">
           <span>Result</span>
-          <strong>{result === "" ? "—" : result}</strong>
+          <strong>{result}</strong>
         </div>
 
         <div className="reset-buttons">
-          <button className="reset-button" onClick={resetInputs}>Reset Inputs</button>
+          <button className="reset-button" onClick={resetInput}>Reset Input</button>
           <button className="reset-button" onClick={resetResult}>Reset Result</button>
         </div>
       </main>
