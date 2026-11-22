@@ -6,26 +6,29 @@ function App() {
   const [result, setResult] = useState(0);
 
   function plus() {
-    setResult(result + Number(inputRef.current.value));
+    const inputVal = inputRef.current.value;
+    setResult(result + Number(inputVal));
   }
 
   function minus() {
-    setResult(result - Number(inputRef.current.value));
+    const inputVal = inputRef.current.value;
+    setResult(result - Number(inputVal));
   }
 
   function times() {
-    setResult(result * Number(inputRef.current.value));
+    const inputVal = inputRef.current.value;
+    setResult(result * Number(inputVal));
   }
 
   function divide() {
-    const inputValue = Number(inputRef.current.value);
+    const inputVal = Number(inputRef.current.value);
 
-    if (inputValue === 0) {
+    if (inputVal === 0) {
       window.alert("Cannot divide by zero.");
       return;
     }
 
-    setResult(result / inputValue);
+    setResult(result / inputVal);
   }
 
   function resetInput() {
