@@ -117,3 +117,10 @@ button:hover {
 .reset-button:hover {
   background: #475569;
 }
+
+.error-message {
+  margin: 12px 0 0;
+  color: #b91c1c;
+  font-size: 14px;
+  text-align: center;
+}
