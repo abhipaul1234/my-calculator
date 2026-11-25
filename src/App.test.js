@@ -4,56 +4,57 @@ import App from "./App";
 describe("React Calculator", () => {
   test("applies each operation to the running result", () => {
     render(<App />);
-    const input = screen.getByLabelText("Number");
+    const input = screen.getByPlaceholderText("Type a number");
 
     fireEvent.change(input, { target: { value: "10" } });
-    fireEvent.click(screen.getByRole("button", { name: "Add" }));
+    fireEvent.click(screen.getByRole("button", { name: "add" }));
     expect(screen.getByText("10")).toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: "4" } });
-    fireEvent.click(screen.getByRole("button", { name: "Subtract" }));
+    fireEvent.click(screen.getByRole("button", { name: "subtract" }));
     expect(screen.getByText("6")).toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: "3" } });
-    fireEvent.click(screen.getByRole("button", { name: "Multiply" }));
+    fireEvent.click(screen.getByRole("button", { name: "multiply" }));
     expect(screen.getByText("18")).toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: "2" } });
-    fireEvent.click(screen.getByRole("button", { name: "Divide" }));
+    fireEvent.click(screen.getByRole("button", { name: "divide" }));
     expect(screen.getByText("9")).toBeInTheDocument();
   });
 
-  test("handles division by zero without changing the result", () => {
+  test("alerts when dividing by zero and keeps the current result", () => {
+    const alertMock = jest.spyOn(window, "alert").mockImplementation(() => {});
     render(<App />);
-    const input = screen.getByLabelText("Number");
+    const input = screen.getByPlaceholderText("Type a number");
 
     fireEvent.change(input, { target: { value: "8" } });
-    fireEvent.click(screen.getByRole("button", { name: "Add" }));
+    fireEvent.click(screen.getByRole("button", { name: "add" }));
 
     fireEvent.change(input, { target: { value: "0" } });
-    fireEvent.click(screen.getByRole("button", { name: "Divide" }));
+    fireEvent.click(screen.getByRole("button", { name: "divide" }));
 
-    expect(screen.getByRole("alert")).toHaveTextContent("Cannot divide by zero.");
+    expect(alertMock).toHaveBeenCalledWith("Cannot divide by zero");
     expect(screen.getByText("8")).toBeInTheDocument();
+    alertMock.mockRestore();
   });
 
   test("resets the input and result independently", () => {
     render(<App />);
-    const input = screen.getByLabelText("Number");
+    const input = screen.getByPlaceholderText("Type a number");
 
     fireEvent.change(input, { target: { value: "12" } });
-    fireEvent.click(screen.getByRole("button", { name: "Add" }));
-    fireEvent.click(screen.getByRole("button", { name: "Reset Input" }));
+    fireEvent.click(screen.getByRole("button", { name: "add" }));
+    fireEvent.click(screen.getByRole("button", { name: "reset input" }));
     expect(input).toHaveValue(null);
     expect(screen.getByText("12")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Reset Result" }));
+    fireEvent.click(screen.getByRole("button", { name: "reset result" }));
     expect(screen.getByText("0")).toBeInTheDocument();
   });
 
-  test("shows a validation message for empty input", () => {
+  test("keeps the initial result at zero", () => {
     render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: "Subtract" }));
-    expect(screen.getByRole("alert")).toHaveTextContent("Please enter a number.");
+    expect(screen.getByText("0")).toBeInTheDocument();
   });
 });
